@@ -31,8 +31,8 @@ const UserSchema = new mongoose.Schema({
 // 校验登陆信息
 UserSchema.statics.checkLoginInfo = async function(token) {
     const currentUser = await this.findOne({ token });
-    if (currentUser) return null;
-    if (currentUser.tokenDeadline < Data.now()) return null;
+    if (!currentUser) return null;
+    if (currentUser.tokenDeadline < Date.now()) return null;
     return currentUser;
 };
 
@@ -54,6 +54,7 @@ UserSchema.statics.register = async function(currentUser) {
     currentUser.password = bcrypt.hashSync(currentUser.password, salt);
     currentUser.createTime = Date.now();
     currentUser.updateTime = Date.now();
+    currentUser.tokenDeadline = Date.now();
     try {
         await currentUser.save();
         return { code: 0, message: '注册成功' };
@@ -76,8 +77,7 @@ UserSchema.statics.loginByPassword = async function(username, password) {
 UserSchema.statics.logout = async function(token) {
     const currentUser = await this.findOne({ token });
     if (currentUser) {
-        currentUser.token = null;
-        currentUser.tokenDeadline = null;
+        currentUser.tokenDeadline = Date.now();
         await currentUser.save();
     }
 };

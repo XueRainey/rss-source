@@ -2,12 +2,19 @@ const path = require('path');
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const logger = require('koa-logger')
+const session = require('koa-session');
 const router = require('./router');
 const app = new Koa();
-
+app.keys = ['SyJ9Jn1IWzLlNueGVYG'];
 // 连接数据库
 require('./connectDb');
-
+app.use(session({
+    key: '_key',
+    maxAge: 86400000,
+    overwrite: true,
+    httpOnly: true,
+    signed: true,
+}, app));
 app.use(bodyParser());
 
 app.use(logger());
