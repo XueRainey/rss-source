@@ -3,7 +3,6 @@ const router = require('koa-router')();
 
 router.get('/', async (ctx, next) => {
     const userInfo = await User.checkLoginInfo(ctx.session.token);
-    console.log(userInfo);
     if (!userInfo) {
         ctx.response.body = { code: 1, message: '未登录' };
     } else {

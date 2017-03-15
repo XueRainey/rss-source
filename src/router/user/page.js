@@ -2,8 +2,7 @@ const User = require('../../modles/user');
 const router = require('koa-router')();
 
 router.get('/', async (ctx, next) => {
-    const token = ctx.cookies.get('token');
-    const userInfo = await User.checkLoginInfo(token);
+    const userInfo = await User.checkLoginInfo(ctx.session.token);
     if (!userInfo) {
         ctx.status = 301;
         ctx.redirect('/user/login');
