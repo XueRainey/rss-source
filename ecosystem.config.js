@@ -6,7 +6,7 @@ module.exports = {
     apps: [
         {
             name: 'rss',
-            script: 'app.js',
+            script: './src/app.js',
             env: {
                 COMMON_VARIABLE: 'true',
                 NODE_SERVER: 'true',
