@@ -1,8 +1,12 @@
 const router = require('koa-router')();
 const userApiRouter = require('./user/api');
 const userPageRouter = require('./user/page');
+const feedApiRouter = require('./feed/api');
+
+
 router.use('/api/user', userApiRouter.routes(), userApiRouter.allowedMethods());
 router.use('/user', userPageRouter.routes(), userPageRouter.allowedMethods());
+router.use('/api/feed', feedApiRouter.routes(), feedApiRouter.allowedMethods());
 
 router.get('/', async (ctx, next) => {
     ctx.status = 301;

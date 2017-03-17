@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const Feed = require('./feed');
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
-const OVERDUE_TIME = 60 * 60 * 24 * 1000;
+const OVERDUE_TIME = 60 * 60 * 24 * 1000 * 30;
 const UserSchema = new mongoose.Schema({
     username: { 
         type: String,
@@ -55,6 +56,16 @@ UserSchema.statics.register = async function(currentUser) {
     currentUser.createTime = Date.now();
     currentUser.updateTime = Date.now();
     currentUser.tokenDeadline = Date.now();
+    Feed.add(new Feed({
+        userId: currentUser._id,
+        name: currentUser.username,
+        title: '默认订阅源标题',
+        description: '默认订阅源介绍',
+        feedUrl: 'http://rainey.space',
+        siteUrl: 'http://rainey.space',
+        master: currentUser.username,
+        categories: ['default']
+    }));
     try {
         await currentUser.save();
         return { code: 0, message: '注册成功' };
@@ -66,6 +77,7 @@ UserSchema.statics.register = async function(currentUser) {
 // 通过密码登陆
 UserSchema.statics.loginByPassword = async function(username, password) {
     const currentUser = await this.findOne({ username });
+    if (!currentUser) return null;
     if (!bcrypt.compareSync(password, currentUser.password)) return null;
     
     const salt = bcrypt.genSaltSync(SALT_ROUNDS);
