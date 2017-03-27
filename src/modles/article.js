@@ -12,22 +12,26 @@ const ArticleSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    url: {
+        type: String,
+        required: true
+    },
     createTime: {
         type: Number,
         required: true
     },
-    updateTime: {
-        type: Number,
+    categories: {
+        type: Array,
         required: true
     },
 });
-// 校验登陆信息
-UserSchema.statics.checkLoginInfo = async function(token) {
-    const currentUser = await this.findOne({ token });
-    if (!currentUser) return null;
-    if (currentUser.tokenDeadline < Date.now()) return null;
-    return currentUser;
-};
+
+// ArticleSchema.statics.addArticle = async function(token) {
+//     const currentUser = await this.findOne({ token });
+//     if (!currentUser) return null;
+//     if (currentUser.tokenDeadline < Date.now()) return null;
+//     return currentUser;
+// };
 
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('Article', ArticleSchema);

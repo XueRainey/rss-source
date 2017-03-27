@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Feed = require('./feed');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
+const path = require('path');
 const SALT_ROUNDS = 10;
 const OVERDUE_TIME = 60 * 60 * 24 * 1000 * 30;
 const UserSchema = new mongoose.Schema({
@@ -56,7 +58,7 @@ UserSchema.statics.register = async function(currentUser) {
     currentUser.createTime = Date.now();
     currentUser.updateTime = Date.now();
     currentUser.tokenDeadline = Date.now();
-    Feed.add(new Feed({
+    await Feed.add(new Feed({
         userId: currentUser._id,
         name: currentUser.username,
         title: 'default feed title',
@@ -67,6 +69,7 @@ UserSchema.statics.register = async function(currentUser) {
         categories: ['default']
     }));
     try {
+        fs.mkdirSync(path.resolve(__dirname, `../../public/${currentUser.username}`));
         await currentUser.save();
         return { code: 0, message: '注册成功' };
     } catch(e) {

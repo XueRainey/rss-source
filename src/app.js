@@ -24,7 +24,7 @@ app.use(logger());
 app.use(require('koa-static')(path.join(__dirname, '../public')));
 // 用户认证
 app.use(async function(ctx, next) {
-    const authPathList = ['/api/user', '/api/feed', '/api/feed/update'];
+    const authPathList = ['/api/user', '/api/feed', '/api/feed/update', '/api/article/add'];
     const currentPath = ctx.request.url.split('?')[0];
     if (!authPathList.includes(currentPath)) {
         await next();
