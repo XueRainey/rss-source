@@ -26,13 +26,12 @@ app.use(require('koa-static')(path.join(__dirname, '../public')));
 app.use(async function(ctx, next) {
     const authPathList = ['/api/user', '/api/feed', '/api/feed/update'];
     const currentPath = ctx.request.url.split('?')[0];
-    console.log('currentPath', currentPath);
     if (!authPathList.includes(currentPath)) {
         await next();
         return;
     }
-    console.log('开始用户信息认证···');
     const token = ctx.request.body.token|| ctx.query.token || ctx.session.token;
+    console.log('开始用户信息认证···', token);
     const userInfo = await User.checkLoginInfo(token);
     if (!userInfo) {
         ctx.response.status = 401;

@@ -28,7 +28,7 @@ router.post('/update', async (ctx, next) => {
         if(!updateInfo[key]) delete updateInfo[key];
     });
     const feedInfo = await Feed.findOneAndUpdate(
-        { name: feedName, userId: currentUser._id },
+        { name: feedName || currentUser.username, userId: currentUser._id },
         { $set: updateInfo },
         { new: true }
     );

@@ -59,8 +59,8 @@ UserSchema.statics.register = async function(currentUser) {
     Feed.add(new Feed({
         userId: currentUser._id,
         name: currentUser.username,
-        title: '默认订阅源标题',
-        description: '默认订阅源介绍',
+        title: 'default feed title',
+        description: 'default feed description',
         feedUrl: 'http://rainey.space',
         siteUrl: 'http://rainey.space',
         master: currentUser.username,
@@ -77,6 +77,7 @@ UserSchema.statics.register = async function(currentUser) {
 // 通过密码登陆
 UserSchema.statics.loginByPassword = async function(username, password) {
     const currentUser = await this.findOne({ username });
+    console.log('currentUser::', currentUser);
     if (!currentUser) return null;
     if (!bcrypt.compareSync(password, currentUser.password)) return null;
     
